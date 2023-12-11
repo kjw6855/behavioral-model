@@ -77,6 +77,12 @@ You can contact the author at :
 #  endif
 #endif
 
+#if defined (__clang__)
+#   define UBSAN_SUPPRESS __attribute__((no_sanitize("undefined")))
+#else
+#   define UBSAN_SUPPRESS
+#endif
+
 //**************************************
 // Includes & Memory related functions
 //**************************************
@@ -221,7 +227,7 @@ static const int one = 1;
 //****************************
 typedef enum { XXH_aligned, XXH_unaligned } XXH_alignment;
 
-FORCE_INLINE U32 XXH_readLE32_align(const void* ptr, XXH_endianess endian, XXH_alignment align)
+FORCE_INLINE UBSAN_SUPPRESS U32 XXH_readLE32_align(const void* ptr, XXH_endianess endian, XXH_alignment align)
 {
     if (align==XXH_unaligned)
         return endian==XXH_littleEndian ? A32(ptr) : XXH_swap32(A32(ptr));
@@ -234,7 +240,7 @@ FORCE_INLINE U32 XXH_readLE32(const void* ptr, XXH_endianess endian)
     return XXH_readLE32_align(ptr, endian, XXH_unaligned);
 }
 
-FORCE_INLINE U64 XXH_readLE64_align(const void* ptr, XXH_endianess endian, XXH_alignment align)
+FORCE_INLINE UBSAN_SUPPRESS U64 XXH_readLE64_align(const void* ptr, XXH_endianess endian, XXH_alignment align)
 {
     if (align==XXH_unaligned)
         return endian==XXH_littleEndian ? A64(ptr) : XXH_swap64(A64(ptr));
@@ -251,7 +257,7 @@ FORCE_INLINE U64 XXH_readLE64(const void* ptr, XXH_endianess endian)
 //****************************
 // Simple Hash Functions
 //****************************
-FORCE_INLINE U32 XXH32_endian_align(const void* input, size_t len, U32 seed, XXH_endianess endian, XXH_alignment align)
+FORCE_INLINE UBSAN_SUPPRESS U32 XXH32_endian_align(const void* input, size_t len, U32 seed, XXH_endianess endian, XXH_alignment align)
 {
     const BYTE* p = (const BYTE*)input;
     const BYTE* bEnd = p + len;
@@ -356,7 +362,7 @@ unsigned int XXH32 (const void* input, size_t len, unsigned seed)
 #endif
 }
 
-FORCE_INLINE U64 XXH64_endian_align(const void* input, size_t len, U64 seed, XXH_endianess endian, XXH_alignment align)
+FORCE_INLINE UBSAN_SUPPRESS U64 XXH64_endian_align(const void* input, size_t len, U64 seed, XXH_endianess endian, XXH_alignment align)
 {
     const BYTE* p = (const BYTE*)input;
     const BYTE* bEnd = p + len;
