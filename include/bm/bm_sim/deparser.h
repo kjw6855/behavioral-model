@@ -68,7 +68,7 @@ class Deparser : public NamedP4Object {
   //! data + payload, and you can transmit the packet. You can get the packet
   //! data and data size by calling respectively Packet::data() and
   //! Packet::get_data_size().
-  void deparse(Packet *pkt) const;
+  bool deparse(Packet *pkt) const;
 
   void add_method_call(ActionFn *action_fn);
 

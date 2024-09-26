@@ -720,7 +720,10 @@ SimpleSwitch::egress_thread(size_t worker_id) {
       continue;
     }
 
-    deparser->deparse(packet.get());
+    if (!deparser->deparse(packet.get())) {
+      BMLOG_DEBUG_PKT(*packet, "Dropping wrong packet at the end of egress");
+      continue;
+    }
 
     // RECIRCULATE
     auto recirculate_flag = RegisterAccess::get_recirculate_flag(packet.get());

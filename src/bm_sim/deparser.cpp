@@ -63,7 +63,7 @@ Deparser::get_headers_size(const PHV &phv) const {
   return headers_size;
 }
 
-void
+bool
 Deparser::deparse(Packet *pkt) const {
   const PHV *phv = pkt->get_phv();
   BMELOG(deparser_start, *pkt, *this);
@@ -75,6 +75,9 @@ Deparser::deparse(Packet *pkt) const {
   BMLOG_DEBUG_PKT(*pkt, "Deparser '{}': start", get_name());
   update_checksums(pkt);
   char *data = pkt->prepend(get_headers_size(*phv));
+  if (data == nullptr)
+      return false;
+
   int bytes_parsed = 0;
   {
     RegisterSync::RegisterLocks RL;
@@ -99,6 +102,8 @@ Deparser::deparse(Packet *pkt) const {
       Debugger::PacketId::make(pkt->get_packet_id(), pkt->get_copy_id()),
       DBG_CTR_EXIT(DBG_CTR_DEPARSER) | get_id());
   BMLOG_DEBUG_PKT(*pkt, "Deparser '{}': end", get_name());
+
+  return true;
 }
 
 void

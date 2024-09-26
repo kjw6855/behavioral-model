@@ -87,7 +87,9 @@ class PacketBuffer {
   char *end() const { return buffer.get() + size; }
 
   char *push(size_t bytes) {
-    assert(data_size + bytes <= size);
+    if (data_size + bytes > size)
+      return nullptr;
+
     data_size += bytes;
     head -= bytes;
     return head;
