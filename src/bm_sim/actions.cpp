@@ -408,9 +408,8 @@ ActionFnEntry::execute(Packet *pkt) const {
         (primitive.get_source_info() == nullptr) ? "(no source info)"
         : primitive.get_source_info()->get_source_fragment());
     param_offset = primitive.get_param_offset();
-    // FIXME(jiwon): action_fn (string parsing error) can have no params
-    primitive.execute(&state, (action_fn->params.size() > param_offset) ?
-            &(action_fn->params[param_offset]) : nullptr);
+    // 199af48: action_fn (string parsing error) can have no params
+    primitive.execute(&state, action_fn->params.data() + param_offset);
 
     idx = primitive.get_jump_offset(idx);
   }
